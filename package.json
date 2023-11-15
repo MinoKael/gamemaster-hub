@@ -1,5 +1,5 @@
 {
-    "name": "dice-roll",
+    "name": "gamemaster-hub",
     "version": "1.0.0",
     "scripts": {
         "dev": "vite",
@@ -8,9 +8,11 @@
     },
     "dependencies": {
         "@mdi/font": "7.0.96",
+        "pinia": "^2.1.7",
         "roboto-fontface": "*",
         "vue": "^3.2.38",
         "vue-cookies": "^1.8.2",
+        "vue-router": "^4.2.5",
         "vuetify": "^3.0.0",
         "webfontloader": "^1.0.0"
     },

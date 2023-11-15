@@ -14,7 +14,7 @@ const theme = useTheme();
                 class="pl-1"
                 rounded="xl"
                 append-icon="mdi-github"
-                href="https://github.com/MinoKael/dice-roll"
+                href="https://github.com/MinoKael/gamemaster-hub"
                 target="_blank"
                 >MinoKael</v-btn
             >
