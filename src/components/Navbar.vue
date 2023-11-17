@@ -1,26 +1,26 @@
 <script setup>
+import {
+    colorNav,
+    toggleTheme,
+    isDarkTheme,
+} from '../plugins/globalFunctions.js';
+import { useRoute } from 'vue-router';
 import { useTheme } from 'vuetify';
-
-const emit = defineEmits(['toggleMagias', 'toggleTomo']);
-
+const location = useRoute();
 const theme = useTheme();
-const toggleTheme = () => {
-    theme.global.name.value = theme.global.current.value.dark
-        ? 'light'
-        : 'dark';
-};
+const emit = defineEmits(['toggleMagias', 'toggleTomo']);
 </script>
 <template>
-    <v-toolbar color="primary" elevation="4">
+    <v-toolbar :color="colorNav(location.name)" elevation="4">
         <v-app-bar-nav-icon></v-app-bar-nav-icon>
         <v-row align="center" justify="center">
-            <v-card-title> Gamemaster Hub </v-card-title>
+            <RouterLink to="/" style="text-decoration: none; color: inherit">
+                <v-card-title> Gamemaster Hub </v-card-title>
+            </RouterLink>
         </v-row>
-        <v-btn icon @click="toggleTheme" aria-label="Mudar tema">
+        <v-btn icon @click="toggleTheme(theme)" aria-label="Mudar tema">
             <v-icon>{{
-                theme.global.current.value.dark
-                    ? 'mdi-weather-sunny'
-                    : 'mdi-weather-night'
+                isDarkTheme(theme, 'mdi-weather-sunny', 'mdi-weather-night')
             }}</v-icon>
         </v-btn>
     </v-toolbar>
