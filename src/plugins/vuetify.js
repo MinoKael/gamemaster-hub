@@ -8,18 +8,18 @@ export default createVuetify({
         themes: {
             light: {
                 colors: {
-                    primary: '#FFB53B',
-                    secondary: '#5CBBF6',
-                    background: '#F8F7F5',
-                    tormenta: '#CE2A28',
+                    primary: '#FFB53B', // Yellow
+                    secondary: '#8BCFF9', // Light Sky Blue
+                    background: '#FFFCF8', // Light Cream
+                    tormenta: '#AC262B', // Red Tormenta
                 },
             },
             dark: {
                 colors: {
-                    primary: '#2B2343',
-                    secondary: '#5CBBF6',
-                    background: '#3A3A3A',
-                    tormenta: '#D32F2F',
+                    primary: '#2B2343', // Dark Purple
+                    secondary: '#5CBBF6', // Light Sky Blue
+                    background: '#3B3B40', // Gray Onyx
+                    tormenta: '#AC262B', // Red Tormenta
                 },
             },
         },

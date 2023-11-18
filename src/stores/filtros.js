@@ -2,33 +2,26 @@ import { defineStore } from 'pinia';
 import { reactive, ref } from 'vue';
 import jsonMagias from '../data/Magias.json';
 
-export const useFiltrosStore = defineStore('filtros', () => {
-    const filtroPesquisa = reactive({
-        nome: '',
-        tipo: [],
-        circulo: [],
-        escola: [],
-        execucao: [],
-        alcance: [],
-        alvo: [],
-        area: [],
-        efeito: [],
-        duracao: [],
-        resistencia: [],
-    });
+const base = {
+    nome: '',
+    tipo: [],
+    circulo: [],
+    escola: [],
+    execucao: [],
+    alcance: [],
+    alvo: [],
+    area: [],
+    efeito: [],
+    duracao: [],
+    resistencia: [],
+};
 
+export const useFiltrosStore = defineStore('filtros', () => {
+    const filtroPesquisa = reactive({ ...base });
     function resetFiltro() {
-        (filtroPesquisa.nome = ''),
-            (filtroPesquisa.tipo = []),
-            (filtroPesquisa.circulo = []),
-            (filtroPesquisa.escola = []),
-            (filtroPesquisa.execucao = []),
-            (filtroPesquisa.alcance = []),
-            (filtroPesquisa.alvo = []),
-            (filtroPesquisa.area = []),
-            (filtroPesquisa.efeito = []),
-            (filtroPesquisa.duracao = []),
-            (filtroPesquisa.resistencia = []);
+        Object.keys(base).forEach((key) => {
+            filtroPesquisa[key] = base[key];
+        });
         filterMagias();
     }
 

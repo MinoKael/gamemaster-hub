@@ -8,22 +8,30 @@ const filtros = useFiltrosStore();
 
 const { mdAndUp } = useDisplay();
 
-const itensPerPage = ref(30);
+const maxItemsPerPage = ref(30);
 const modelPagination = ref(1);
 const posts = computed(() => {
-    if (itensPerPage.value === 'Tudo') {
+    if (maxItemsPerPage.value === 'Tudo') {
         return filtros.filteredJson;
     } else {
-        const startIndex = (modelPagination.value - 1) * itensPerPage.value;
-        const endIndex = startIndex + itensPerPage.value;
+        const startIndex =
+            (modelPaginationComputed.value - 1) * maxItemsPerPage.value;
+        const endIndex = startIndex + maxItemsPerPage.value;
 
         return filtros.filteredJson.slice(startIndex, endIndex);
     }
 });
 
 const paginationComputed = computed(() => {
-    if (itensPerPage.value === 'Tudo') return 1;
-    return Math.ceil(filtros.filteredJson.length / itensPerPage.value);
+    if (maxItemsPerPage.value === 'Tudo') return 1;
+    return Math.ceil(filtros.filteredJson.length / maxItemsPerPage.value);
+});
+const modelPaginationComputed = computed({
+    get: () =>
+        modelPagination.value > paginationComputed.value
+            ? paginationComputed.value
+            : modelPagination.value,
+    set: (val) => (modelPagination.value = val),
 });
 </script>
 <template>
@@ -61,10 +69,10 @@ const paginationComputed = computed(() => {
                     </v-expansion-panel>
                 </v-expansion-panels>
             </v-container>
-            <v-btn color="tormenta" @click="filtros.resetFiltro"
+
+            <v-btn color="tormenta" class="mx-2" @click="filtros.resetFiltro"
                 >Limpar Filtros</v-btn
             >
-
             <h4 class="pa-0 my-2">
                 {{ filtros.filteredJson.length }} de
                 {{ filtros.jsonMagias.length }} magias encontradas
@@ -84,7 +92,7 @@ const paginationComputed = computed(() => {
                         >Itens por página</span
                     >
                     <v-select
-                        v-model="itensPerPage"
+                        v-model="maxItemsPerPage"
                         :items="[30, 50, 'Tudo']"
                         variant="solo-filled"
                         hide-details
@@ -93,7 +101,7 @@ const paginationComputed = computed(() => {
 
                     <v-pagination
                         style="min-width: 400px !important"
-                        v-model="modelPagination"
+                        v-model="modelPaginationComputed"
                         :length="paginationComputed"
                         :total-visible="3"
                     ></v-pagination>
