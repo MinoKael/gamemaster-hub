@@ -1,46 +1,56 @@
-<script setup></script>
+<script setup>
+import { ref } from 'vue';
+
+const items = ref([
+    {
+        route: '/dice',
+        srcImg: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg',
+        title: 'Rolagem de Dados',
+    },
+    {
+        route: '/magias',
+        srcImg: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg',
+        title: 'Magias Tormenta20',
+    },
+]);
+</script>
 <template>
-    <div
-        class="d-flex justify-space-between"
-        color="background"
+    <v-card
+        class="justify-center align-center mt-4"
+        max-width="650px"
         flat
         elevation="0"
+        variant="text"
     >
-        <v-hover v-slot="{ isHovering, props }">
-            <RouterLink
-                to="/dice"
-                style="text-decoration: none; color: inherit"
-            >
-                <v-card
-                    :elevation="isHovering ? 16 : 2"
-                    v-bind="props"
-                    :class="{ 'on-hover': isHovering }"
-                    class="ma-2"
-                    color="secondary"
-                    width="300px"
-                    height="200px"
+        <v-row no-gutters align="center" justify="center">
+            <v-hover v-slot="{ isHovering, props }" v-for="item in items">
+                <RouterLink
+                    :to="item.route"
+                    style="text-decoration: none; color: inherit"
                 >
-                    Rolagem de Dados
-                </v-card>
-            </RouterLink>
-        </v-hover>
-        <v-hover v-slot="{ isHovering, props }">
-            <RouterLink
-                to="/magias"
-                style="text-decoration: none; color: inherit"
-            >
-                <v-card
-                    :elevation="isHovering ? 16 : 2"
-                    v-bind="props"
-                    :class="{ 'on-hover': isHovering }"
-                    class="ma-2"
-                    color="secondary"
-                    width="300px"
-                    height="200px"
-                >
-                    Magias T20
-                </v-card>
-            </RouterLink>
-        </v-hover>
-    </div>
+                    <v-card
+                        :elevation="isHovering ? 16 : 2"
+                        v-bind="props"
+                        :class="{ 'on-hover': isHovering }"
+                        class="ma-2"
+                        width="300px"
+                        height="250px"
+                    >
+                        <v-img
+                            :src="item.srcImg"
+                            height="250px"
+                            cover
+                            class="align-end"
+                        >
+                            <v-card-title
+                                class="text-white text-h5 font-weight-black"
+                            >
+                                {{ item.title }}
+                            </v-card-title>
+                        </v-img>
+                    </v-card>
+                </RouterLink>
+            </v-hover>
+        </v-row>
+    </v-card>
 </template>
