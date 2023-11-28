@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import magiasBanner from '../assets/magias_banner.png';
 
 const items = ref([
     {
@@ -9,7 +10,7 @@ const items = ref([
     },
     {
         route: '/magias',
-        srcImg: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg',
+        srcImg: magiasBanner,
         title: 'Magias Tormenta20',
     },
 ]);
@@ -43,7 +44,7 @@ const items = ref([
                             class="align-end"
                         >
                             <v-card-title
-                                class="text-white text-h5 font-weight-black"
+                                class="text-white text-center text-h5 font-weight-bold bg-primary pa-1"
                             >
                                 {{ item.title }}
                             </v-card-title>

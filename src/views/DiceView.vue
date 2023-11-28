@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+import DiceBox from '@/components/DiceBox.vue';
+</script>
 <template>
-    <v-card>Você esta em Dados!</v-card>
+    <DiceBox />
 </template>
