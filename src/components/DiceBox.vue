@@ -1,5 +1,7 @@
 <script setup>
 import { reactive, computed, ref } from 'vue';
+import { useDisplay } from 'vuetify';
+import { v4 } from 'uuid';
 
 const dices = ref([
     { name: 'd2', icon: 'mdi-dice-2', quantity: 0 },
@@ -39,7 +41,8 @@ const computedString = computed(() => {
 const results = reactive([]);
 const adicionais = ref('');
 const rollForm = ref(null);
-const resultsComputed = computed(() => results.reverse());
+const resultsComputed = computed(() => results.toReversed());
+const { mdAndUp } = useDisplay();
 
 function clickDice(dice, isSubtract = false) {
     isSubtract
@@ -48,7 +51,9 @@ function clickDice(dice, isSubtract = false) {
             : (dice.quantity -= 1)
         : (dice.quantity += 1);
 }
-
+function removeLog(id) {
+    results.splice(results.map((x) => x.id).indexOf(id), 1);
+}
 async function processRoll() {
     const isValid = await rollForm.value.validate();
     if (isValid.valid) {
@@ -82,6 +87,7 @@ function evaluateExpression(expression) {
         else return parseInt(x);
     });
     return {
+        id: v4(),
         formula: `[ ${terms.join(' ')} ]`,
         rolagem: `[ ${termsEvaluated.join(' ')} ]`,
         total: termsEvaluated.reduce((acc, val, index) => {
@@ -108,28 +114,34 @@ function evaluateExpression(expression) {
         height="100%"
         :elevation="0"
         variant="text"
-        max-width="730px"
+        max-width="1000px"
     >
-        <v-col>
+        <v-col align="center">
             <v-card
                 class="my-4 d-flex flex-column-reverse overflow-y-auto"
-                max-height="180"
-                height="200"
+                :max-height="mdAndUp ? 270 : 180"
+                :height="mdAndUp ? 280 : 200"
             >
                 <div
-                    class="pa-1 text-h6 font-weight-bold"
+                    class="pa-0 font-weight-bold text-subtitle-1"
                     height="fit-content"
                     v-for="result in resultsComputed"
-                    :key="result"
+                    :key="result.id"
                 >
                     <div>
-                        {{ `Fórmula: ${result.formula}` }}
+                        <code>
+                            {{ `Fórmula: ${result.formula}` }}
+                        </code>
                     </div>
                     <div>
-                        {{ `Rolagem: ${result.rolagem}` }}
+                        <code>
+                            {{ `Rolagem: ${result.rolagem}` }}
+                        </code>
                     </div>
                     <div>
-                        {{ `Total: ${result.total}` }}
+                        <code>
+                            {{ `Total: ${result.total}` }}
+                        </code>
                     </div>
                     <v-divider :thickness="4" />
                 </div>
@@ -138,11 +150,11 @@ function evaluateExpression(expression) {
             <v-row no-gutters class="mb-3" justify="center">
                 <v-btn
                     v-for="dice in dices"
-                    size="80"
+                    :size="mdAndUp ? 100 : 85"
                     rounded="circle"
                     :ripple="false"
                     variant="outlined"
-                    class="d-flex align-center justify-center mx-1"
+                    class="d-flex align-center justify-center ma-1"
                     @click="clickDice(dice)"
                     @click.right.prevent="clickDice(dice, true)"
                     @click.ctrl="clickDice(dice, true)"

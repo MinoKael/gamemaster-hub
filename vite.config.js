@@ -2,6 +2,7 @@ import vue from '@vitejs/plugin-vue';
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify';
 import { defineConfig } from 'vite';
 import { fileURLToPath, URL } from 'node:url';
+import basicSsl from '@vitejs/plugin-basic-ssl';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -13,6 +14,7 @@ export default defineConfig({
         vuetify({
             autoImport: true,
         }),
+        basicSsl(),
     ],
     define: { 'process.env': {} },
     resolve: {
@@ -23,5 +25,7 @@ export default defineConfig({
     },
     server: {
         port: 3000,
+        host: true,
+        open: '/',
     },
 });
