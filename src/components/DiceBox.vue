@@ -83,7 +83,6 @@ function evaluateExpression(expression) {
         else if (x === '+' || x === '-') return x;
         else return parseInt(x);
     });
-    console.log(termsEvaluated);
     return {
         formula: `[ ${terms.join(' ')} ]`,
         rolagem: `[ ${termsEvaluated.join(' ')} ]`,
