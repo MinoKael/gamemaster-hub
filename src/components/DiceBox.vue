@@ -1,93 +1,74 @@
 <script setup>
-import { reactive, computed, ref } from 'vue';
+import { reactive, computed, ref, watch } from 'vue';
 import { useDisplay } from 'vuetify';
-import { v4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
+import { useDicesStore } from '../stores/dices';
+const diceStore = useDicesStore();
 
-const dices = ref([
-    { name: 'd2', icon: 'mdi-dice-2', quantity: 0 },
-    { name: 'd4', icon: 'mdi-dice-d4', quantity: 0 },
-    { name: 'd6', icon: 'mdi-dice-d6', quantity: 0 },
-    { name: 'd8', icon: 'mdi-dice-d8', quantity: 0 },
-    { name: 'd10', icon: 'mdi-dice-d10', quantity: 0 },
-    { name: 'd12', icon: 'mdi-dice-d12', quantity: 0 },
-    { name: 'd20', icon: 'mdi-dice-d20', quantity: 0 },
-    { name: 'd100', icon: 'mdi-dice-multiple', quantity: 0 },
-]);
-
+const results = reactive([]);
+const rollForm = ref(null);
+const active = ref(null);
+const resultsComputed = computed(() => results.toReversed());
+const { mdAndUp } = useDisplay();
+const regex = {
+    maxRoll: /\d{4,}d/g,
+    validate: /\d?d[+-]?\b|[+-]d\d+?\b|[+-]{2,}\b/g,
+    terms: /\d+d\d+(k[hl])?|[+-]|\d+/g,
+    replace: /[^0-9+\-d]/g,
+};
 const rules = {
+    maxRoll: (value) =>
+        !regex.maxRoll.test(value) ||
+        'O número máximo de dados é 999. Por favor, insira um número menor.',
     validate: (value) =>
-        !/\d?d[+-]?\b|[+-]d\d+?\b|[+-]{2,}|\d{5,}d/g.test(value) ||
+        !regex.validate.test(value) ||
         'Fórmula de dados inválida. Utilize o formato "NdL", onde N é o número de dados e L é o número de lados.',
     required: (value) => !!value || 'Campo Obrigatório!',
 };
 
-const computedDice = computed(() => {
-    return dices.value
-        .filter((dice) => dice.quantity > 0)
-        .map((dice) => `${dice.quantity}${dice.name}`)
-        .join('+');
-});
-
-const computedString = computed(() => {
-    const modelFormatted =
-        adicionais.value[0] == '+' ||
-        adicionais.value[0] == '-' ||
-        adicionais.value.length == 0
-            ? adicionais.value
-            : '+' + adicionais.value;
-    return (computedDice.value + modelFormatted).replaceAll(' ', '');
-});
-
-const results = reactive([]);
-const adicionais = ref('');
-const rollForm = ref(null);
-const resultsComputed = computed(() => results.toReversed());
-const { mdAndUp } = useDisplay();
-
-function clickDice(dice, isSubtract = false) {
-    isSubtract
-        ? dice.quantity == 0
-            ? null
-            : (dice.quantity -= 1)
-        : (dice.quantity += 1);
-}
 function removeLog(id) {
     results.splice(results.map((x) => x.id).indexOf(id), 1);
 }
-async function processRoll() {
-    const isValid = await rollForm.value.validate();
-    if (isValid.valid) {
-        const objResult = evaluateExpression(computedString.value);
+function reset() {
+    diceStore.resetDices();
+    active.value = null;
+}
+watch(diceStore.dices, (newVal) => {
+    if (newVal.find((d) => d.name === 'd20').quantity == 0) active.value = null;
+});
+async function validateRoll() {
+    const { valid } = await rollForm.value.validate();
+    if (valid == true) {
+        const objResult = evaluateExpression(diceStore.computedString);
         results.push(objResult);
     }
 }
 function rollDice(formula) {
-    const [rolls, sides] = formula.split('d').map(Number);
-    if (isNaN(rolls) || isNaN(sides) || rolls <= 0 || sides <= 0) {
-        throw new Error(
-            'Fórmula de dados inválida. Utilize o formato "NdL", onde N é o número de dados e L é o número de lados.'
-        );
-    }
+    const [rolls, sides] = formula.split('d').map((x) => x.split(/kh|kl/g)[0]);
     let result = [];
     for (let i = 0; i < rolls; i++) {
-        result.push(Math.floor(Math.random() * sides) + 1);
+        result.push(Math.floor(Math.random() * parseInt(sides)) + 1);
     }
-    return result;
+    return result.sort((a, b) => {
+        switch (active.value) {
+            case 1:
+                return a - b;
+            case 0:
+            default:
+                return b - a;
+        }
+    });
 }
 
 function evaluateExpression(expression) {
-    if (/d[+-]\b|[+-]d\b|[+-]{2,}|\d{4,}d/g.test(expression))
-        throw new Error(
-            'Fórmula de dados inválida. Utilize o formato "NdL", onde N é o número de dados e L é o número de lados.'
-        );
-    const terms = expression.match(/[+-]|\d+d\d+|\d+/g);
+    const terms = expression.match(regex.terms);
     const termsEvaluated = terms.map((x) => {
         if (x.includes('d')) return rollDice(x);
         else if (x === '+' || x === '-') return x;
         else return parseInt(x);
     });
     return {
-        id: v4(),
+        id: uuidv4(),
         formula: `[ ${terms.join(' ')} ]`,
         rolagem: `[ ${termsEvaluated.join(' ')} ]`,
         total: termsEvaluated.reduce((acc, val, index) => {
@@ -98,9 +79,11 @@ function evaluateExpression(expression) {
             } else if (typeof val === 'object') {
                 return (
                     acc +
-                    val.reduce((acc, value) => {
-                        return acc + value;
-                    }, 0)
+                    (terms[index].includes('k')
+                        ? val[0]
+                        : val.reduce((internalAcc, internalValue) => {
+                              return internalAcc + internalValue;
+                          }, 0))
                 );
             }
             return acc;
@@ -149,15 +132,15 @@ function evaluateExpression(expression) {
 
             <v-row no-gutters class="mb-3" justify="center">
                 <v-btn
-                    v-for="dice in dices"
+                    v-for="dice in diceStore.dices"
                     :size="mdAndUp ? 100 : 85"
                     rounded="circle"
                     :ripple="false"
                     variant="outlined"
                     class="d-flex align-center justify-center ma-1"
-                    @click="clickDice(dice)"
-                    @click.right.prevent="clickDice(dice, true)"
-                    @click.ctrl="clickDice(dice, true)"
+                    @click="diceStore.clickDice(dice)"
+                    @click.right.prevent="diceStore.clickDice(dice, true)"
+                    @click.ctrl="diceStore.clickDice(dice, true)"
                 >
                     <v-badge
                         v-if="dice.quantity"
@@ -170,32 +153,72 @@ function evaluateExpression(expression) {
                     <v-icon v-else :icon="dice.icon" size="50" />
                 </v-btn>
             </v-row>
-            <v-form validate-on="submit" ref="rollForm">
+            <v-form ref="rollForm">
                 <v-text-field
-                    v-model:model-value="computedString"
+                    v-model:model-value="diceStore.computedString"
                     variant="outlined"
                     readonly
                     placeholder="Fórmula"
                     class="mb-2"
-                    :rules="[rules.required, rules.validate]"
-                />
-                <!-- v-model:model-value="adicionais" -->
+                    :rules="[
+                        rules.required(diceStore.computedString),
+                        rules.validate(diceStore.computedString),
+                        rules.maxRoll(diceStore.computedString),
+                    ]"
+                >
+                    <template #append-inner>
+                        <v-btn-toggle v-model:model-value="active" divided>
+                            <v-btn
+                                variant="outlined"
+                                icon
+                                :size="mdAndUp ? 'default' : 'small'"
+                                @click="
+                                    diceStore.clickKeepModifiers('kh', active)
+                                "
+                            >
+                                KH
+                            </v-btn>
+                            <v-btn
+                                variant="outlined"
+                                icon
+                                :size="mdAndUp ? 'default' : 'small'"
+                                @click="
+                                    diceStore.clickKeepModifiers('kl', active)
+                                "
+                            >
+                                KL
+                            </v-btn>
+                        </v-btn-toggle>
+                        <v-btn
+                            icon="mdi-reload"
+                            variant="text"
+                            :size="mdAndUp ? 'default' : 'small'"
+                            @click="reset"
+                        />
+                    </template>
+                </v-text-field>
+
                 <v-text-field
-                    :value="adicionais"
+                    :value="diceStore.adicionais"
                     @input="
                         (event) =>
-                            (adicionais = event.target.value.replaceAll(
-                                /[^0-9+\-d]/g,
-                                ''
-                            ))
+                            (diceStore.adicionais =
+                                event.target.value.replaceAll(
+                                    regex.replace,
+                                    ''
+                                ))
                     "
                     variant="outlined"
                     label="Adicionais"
                     placeholder="+12..."
+                    :rules="[
+                        rules.validate(diceStore.adicionais),
+                        rules.maxRoll(diceStore.adicionais),
+                    ]"
                     clearable
-                    @click:clear="adicionais = ''"
+                    @click:clear="diceStore.adicionais = null"
                 />
-                <v-btn block @click="processRoll">Rolar</v-btn>
+                <v-btn block @click="validateRoll">Rolar</v-btn>
             </v-form>
         </v-col>
     </v-card>
