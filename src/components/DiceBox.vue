@@ -13,10 +13,8 @@ const dices = ref([
 ]);
 
 const rules = {
-    validate: (
-        value // TODO: Consertar a validacao para impedir exemplos como esse 1d4+1d
-    ) =>
-        !/^d[+-]|^[+-]d|^[+-]{2,}|^\d{5,}d/g.test(value) ||
+    validate: (value) =>
+        !/\d?d[+-]?\b|[+-]d\d+?\b|[+-]{2,}|\d{5,}d/g.test(value) ||
         'Fórmula de dados inválida. Utilize o formato "NdL", onde N é o número de dados e L é o número de lados.',
     required: (value) => !!value || 'Campo Obrigatório!',
 };
