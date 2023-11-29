@@ -6,7 +6,7 @@ import basicSsl from '@vitejs/plugin-basic-ssl';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    base: process.env.BASE_URL,
+    base: '/gamemaster-hub/',
     plugins: [
         vue({
             template: { transformAssetUrls },
