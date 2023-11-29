@@ -1,7 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../pages/Home.vue';
-import Dice from '../pages/Dice.vue';
-import Magias from '../pages/Magias.vue';
 
 const router = createRouter({
     history: createWebHistory('/gamemaster-hub/'),
@@ -14,12 +12,12 @@ const router = createRouter({
         {
             path: '/dice',
             name: 'dice',
-            component: Dice,
+            component: () => import('../pages/Dice.vue'),
         },
         {
             path: '/magias',
             name: 'magias',
-            component: Magias,
+            component: () => import('../pages/Magias.vue'),
         },
         {
             // path: "*",
