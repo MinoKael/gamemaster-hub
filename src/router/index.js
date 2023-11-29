@@ -10,12 +10,12 @@ const router = createRouter({
             component: Home,
         },
         {
-            path: 'dice',
+            path: '/dice',
             name: 'dice',
             component: () => import('../pages/Dice.vue'),
         },
         {
-            path: 'magias',
+            path: '/magias',
             name: 'magias',
             component: () => import('../pages/Magias.vue'),
         },
