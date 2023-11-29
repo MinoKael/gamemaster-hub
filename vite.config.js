@@ -4,6 +4,7 @@ import { defineConfig } from 'vite';
 import { fileURLToPath, URL } from 'node:url';
 import basicSsl from '@vitejs/plugin-basic-ssl';
 
+// https://vitejs.dev/config/
 export default defineConfig({
     base: import.meta.env.BASE_URL,
     plugins: [
@@ -27,6 +28,4 @@ export default defineConfig({
         host: true,
         open: '/',
     },
-    publicPath:
-        process.env.NODE_ENV === 'production' ? import.meta.env.BASE_URL : '/',
 });
