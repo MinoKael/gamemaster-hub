@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../pages/Home.vue';
+import Dice from '../pages/Dice.vue';
+import Magias from '../pages/Magias.vue';
 
 const router = createRouter({
     history: createWebHistory('/gamemaster-hub/'),
@@ -12,12 +14,18 @@ const router = createRouter({
         {
             path: '/dice',
             name: 'dice',
-            component: () => import('../pages/Dice.vue'),
+            component: Dice,
         },
         {
             path: '/magias',
             name: 'magias',
-            component: () => import('../pages/Magias.vue'),
+            component: Magias,
+        },
+        {
+            // path: "*",
+            path: '/:catchAll(.*)',
+            name: 'NotFound',
+            component: Home,
         },
     ],
 });
