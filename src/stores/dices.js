@@ -22,7 +22,7 @@ export const useDicesStore = defineStore('dices', () => {
             dices[index].quantity = 0;
             dices[index].keepModifier = '';
         });
-        adicionais.value = null;
+        adicionais.value = '';
     }
     const computedDice = computed(() => {
         return dices
@@ -32,17 +32,20 @@ export const useDicesStore = defineStore('dices', () => {
             })
             .join('+');
     });
-    const adicionais = ref(null);
+    const adicionais = ref('');
     const computedString = computed(() => {
-        const modelFormatted =
-            adicionais.value != null
-                ? adicionais?.value[0] == '+' ||
-                  adicionais?.value[0] == '-' ||
-                  adicionais?.value.length == 0
-                    ? adicionais.value
-                    : '+' + adicionais.value
+        let plus =
+            computedDice.value.length > 0 &&
+            adicionais.value.length > 0 &&
+            adicionais.value[0] !== '+' &&
+            adicionais.value[0] !== '-'
+                ? '+'
                 : '';
-        return (computedDice.value + modelFormatted).replaceAll(' ', '');
+
+        return (computedDice.value + plus + adicionais.value).replaceAll(
+            ' ',
+            ''
+        );
     });
     function clickDice(dice, isSubtract = false) {
         isSubtract

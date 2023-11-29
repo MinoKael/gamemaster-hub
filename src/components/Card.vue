@@ -15,12 +15,12 @@ const { magia } = defineProps(['magia']);
             v-bind="props"
         >
             <v-card-item class="pb-0">
-                <v-card-title class="text-tormenta text-wrap">{{
+                <v-card-title class="text-tormentaText text-wrap">{{
                     magia.nome
                 }}</v-card-title>
                 <v-card-subtitle class="pb-2"
                     >{{ magia.tipo }} {{ magia.circulo }} ({{ magia.escola }})
-                    <span class="text-tormenta font-weight-black"
+                    <span class="text-tormentaText font-weight-black"
                         >{{ magia.custo }} PM</span
                     >
                 </v-card-subtitle>

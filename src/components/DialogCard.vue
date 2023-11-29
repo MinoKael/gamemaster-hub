@@ -15,12 +15,12 @@ const { magia } = defineProps(['magia']);
     >
         <v-card>
             <v-card-title
-                class="text-h4 font-weight-bold text-tormenta text-wrap px-6 pt-4"
+                class="text-h4 font-weight-bold text-tormentaText text-wrap px-6 pt-4"
                 >{{ magia.nome }}</v-card-title
             >
             <v-card-subtitle class="font-weight-bold px-6">
                 {{ magia.tipo }} {{ magia.circulo }} ({{ magia.escola }})
-                <span class="text-tormenta text-h6 font-weight-bold"
+                <span class="text-tormentaText text-h6 font-weight-bold"
                     >{{ magia.custo }} PM</span
                 >
             </v-card-subtitle>
@@ -34,14 +34,14 @@ const { magia } = defineProps(['magia']);
                 <v-divider class="my-3"></v-divider>
 
                 <p v-for="aprimoramento in magia.aprimoramentos">
-                    <span class="text-tormenta font-weight-bold">{{
+                    <span class="text-tormentaText font-weight-bold">{{
                         aprimoramento.match(/.+?:/).toString()
                     }}</span>
                     {{ aprimoramento.match(/(?<=:).+/).toString() }}
                 </p>
             </v-card-text>
             <v-card-actions>
-                <v-btn color="tormenta" block @click="dialog = false"
+                <v-btn color="tormentaText" block @click="dialog = false"
                     >Fechar</v-btn
                 >
             </v-card-actions>

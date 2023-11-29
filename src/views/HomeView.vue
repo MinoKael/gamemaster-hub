@@ -1,11 +1,12 @@
 <script setup>
 import { ref } from 'vue';
 import magiasBanner from '../assets/magias_banner.png';
+import diceBanner from '../assets/dice_banner.png';
 
 const items = ref([
     {
         route: '/dice',
-        srcImg: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg',
+        srcImg: diceBanner,
         title: 'Rolagem de Dados',
     },
     {

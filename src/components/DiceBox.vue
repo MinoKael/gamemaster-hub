@@ -14,7 +14,7 @@ const regex = {
     maxRoll: /\d{4,}d/g,
     validate: /\d?d[+-]?\b|[+-]d\d+?\b|[+-]{2,}\b/g,
     terms: /\d+d\d+(k[hl])?|[+-]|\d+/g,
-    replace: /[^0-9+\-d]/g,
+    input: /[^0-9+\-dkhl]/g,
 };
 const rules = {
     maxRoll: (value) =>
@@ -24,6 +24,9 @@ const rules = {
         !regex.validate.test(value) ||
         'Fórmula de dados inválida. Utilize o formato "NdL", onde N é o número de dados e L é o número de lados.',
     required: (value) => !!value || 'Campo Obrigatório!',
+    input: (value) =>
+        !regex.input.test(value) ||
+        'Os únicos caracteres aceitos são 0-9, +, -, d, k, l!',
 };
 
 function removeLog(id) {
@@ -32,6 +35,7 @@ function removeLog(id) {
 function reset() {
     diceStore.resetDices();
     active.value = null;
+    rollForm.value.resetValidation();
 }
 watch(diceStore.dices, (newVal) => {
     if (newVal.find((d) => d.name === 'd20').quantity == 0) active.value = null;
@@ -197,26 +201,18 @@ function evaluateExpression(expression) {
                         />
                     </template>
                 </v-text-field>
-
                 <v-text-field
-                    :value="diceStore.adicionais"
-                    @input="
-                        (event) =>
-                            (diceStore.adicionais =
-                                event.target.value.replaceAll(
-                                    regex.replace,
-                                    ''
-                                ))
-                    "
+                    v-model:model-value="diceStore.adicionais"
                     variant="outlined"
                     label="Adicionais"
                     placeholder="+12..."
                     :rules="[
+                        rules.input(diceStore.adicionais),
                         rules.validate(diceStore.adicionais),
                         rules.maxRoll(diceStore.adicionais),
                     ]"
                     clearable
-                    @click:clear="diceStore.adicionais = null"
+                    @click:clear="diceStore.adicionais = ''"
                 />
                 <v-btn block @click="validateRoll">Rolar</v-btn>
             </v-form>

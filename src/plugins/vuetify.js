@@ -12,6 +12,7 @@ export default createVuetify({
                     secondary: '#8BCFF9', // Light Sky Blue
                     background: '#FFFCF8', // Light Cream
                     tormenta: '#AC262B', // Red Tormenta
+                    tormentaText: '#CE2A28', // Red Tormenta
                 },
             },
             dark: {
@@ -20,6 +21,7 @@ export default createVuetify({
                     secondary: '#5CBBF6', // Light Sky Blue
                     background: '#3B3B40', // Gray Onyx
                     tormenta: '#AC262B', // Red Tormenta
+                    tormentaText: '#CE2A28', // Red Tormenta
                 },
             },
         },
