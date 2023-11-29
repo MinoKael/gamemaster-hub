@@ -12,7 +12,7 @@ const items = ref([
     {
         route: '/magias',
         srcImg: magiasBanner,
-        title: 'Magias Tormenta20',
+        title: 'Magias Tormenta 20',
     },
 ]);
 </script>
