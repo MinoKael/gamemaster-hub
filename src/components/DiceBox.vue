@@ -8,6 +8,7 @@ const diceStore = useDicesStore();
 const results = reactive([]);
 const rollForm = ref(null);
 const active = ref(null);
+
 const resultsComputed = computed(() => results.toReversed());
 const { mdAndUp } = useDisplay();
 const regex = {
@@ -29,9 +30,6 @@ const rules = {
         'Os únicos caracteres aceitos são 0-9, +, -, d, k, l!',
 };
 
-function removeLog(id) {
-    results.splice(results.map((x) => x.id).indexOf(id), 1);
-}
 function reset() {
     diceStore.resetDices();
     active.value = null;
@@ -138,11 +136,11 @@ function evaluateExpression(expression) {
             <v-row no-gutters class="mb-3" justify="center">
                 <v-btn
                     v-for="dice in diceStore.dices"
-                    :size="mdAndUp ? 100 : 85"
+                    :size="mdAndUp ? 100 : 75"
                     rounded="circle"
                     :ripple="false"
                     variant="outlined"
-                    class="d-flex align-center justify-center ma-1"
+                    class="ma-1"
                     @click="diceStore.clickDice(dice)"
                     @click.right.prevent="diceStore.clickDice(dice, true)"
                     @click.ctrl="diceStore.clickDice(dice, true)"
@@ -196,6 +194,7 @@ function evaluateExpression(expression) {
                         </v-btn-toggle>
                         <v-btn
                             icon="mdi-reload"
+                            class="ml-1"
                             variant="text"
                             :size="mdAndUp ? 'default' : 'small'"
                             @click="reset"
