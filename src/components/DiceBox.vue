@@ -36,6 +36,7 @@ function reset() {
     diceStore.resetDices();
     active.value = null;
     rollForm.value.resetValidation();
+    results.splice(0);
 }
 watch(diceStore.dices, (newVal) => {
     if (newVal.find((d) => d.name === 'd20').quantity == 0) active.value = null;

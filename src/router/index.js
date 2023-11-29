@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
+import DiceBoxVue from '@/components/DiceBox.vue';
+import MagiasViewVue from '../views/MagiasView.vue';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,12 +14,12 @@ const router = createRouter({
         {
             path: '/dice',
             name: 'dice',
-            component: () => import('../views/DiceView.vue'),
+            component: DiceBoxVue,
         },
         {
             path: '/magias',
             name: 'magias',
-            component: () => import('../views/MagiasView.vue'),
+            component: MagiasViewVue,
         },
     ],
 });
