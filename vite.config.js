@@ -6,7 +6,7 @@ import basicSsl from '@vitejs/plugin-basic-ssl';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    base: import.meta.env.BASE_URL,
+    base: process.env.BASE_URL,
     plugins: [
         vue({
             template: { transformAssetUrls },
