@@ -49,10 +49,8 @@ export const useDicesStore = defineStore('dices', () => {
     });
     function clickDice(dice, isSubtract = false) {
         isSubtract
-            ? dice.quantity == 0
-                ? null
-                : (dice.quantity -= 1)
-            : (dice.quantity += 1);
+            ? (dice.quantity = Math.max(0, dice.quantity--))
+            : dice.quantity++;
     }
     function clickKeepModifiers(keepModifier, active) {
         let die = dices.find((d) => d.name === 'd20');
