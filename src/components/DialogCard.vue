@@ -18,9 +18,9 @@ const { magia } = defineProps(['magia']);
                 class="text-h4 font-weight-bold text-tormentaText text-wrap px-6 pt-4"
                 >{{ magia.nome }}</v-card-title
             >
-            <v-card-subtitle class="font-weight-bold px-6">
+            <v-card-subtitle class="d-flex align-center font-weight-bold px-6">
                 {{ magia.tipo }} {{ magia.circulo }} ({{ magia.escola }})
-                <span class="text-tormentaText text-h6 font-weight-bold"
+                <span class="ml-2 text-tormentaText text-h6 font-weight-bold"
                     >{{ magia.custo }} PM</span
                 >
             </v-card-subtitle>
