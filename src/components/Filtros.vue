@@ -14,6 +14,7 @@ const { mdAndUp } = defineProps(['mdAndUp']);
         >
             <v-responsive class="ma-1">
                 <v-select
+                    v-if="key != 'Referência'"
                     :key="key"
                     :label="key"
                     :items="value"

@@ -1,6 +1,18 @@
 import { defineStore } from 'pinia';
 import { reactive, ref } from 'vue';
-import jsonMagias from '../data/Magias.json';
+import rawJson from '../data/Magias.json';
+
+const jsonMagias = rawJson.sort((a,b) => {
+  const nomeA = a.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase()
+  const nomeB = b.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase()
+  if(nomeA < nomeB){
+    return -1;
+  }
+  if(nomeA > nomeB){
+    return 1;
+  }
+  return 0;
+})
 
 const base = {
     nome: '',
@@ -14,6 +26,7 @@ const base = {
     efeito: [],
     duracao: [],
     resistencia: [],
+    referencia: [],
 };
 
 export const useFiltrosStore = defineStore('filtros', () => {
@@ -74,6 +87,7 @@ export const useFiltrosStore = defineStore('filtros', () => {
             'Outros',
         ],
         Resistência: ['Fortitude', 'Reflexos', 'Vontade', 'Outros'],
+        Referência: ['Tormenta 20', 'Dragão Brasil', 'Atlas de Arton', 'Ameaças de Arton']
     });
 
     const filteredJson = ref(jsonMagias);
@@ -95,48 +109,53 @@ export const useFiltrosStore = defineStore('filtros', () => {
     }
     function filterMagias() {
         filteredJson.value = jsonMagias.filter((magia) => {
-            return (
-                stringSearch(magia.nome, filtroPesquisa.nome) &&
-                applyFilter(
-                    filtroPesquisa.alcance,
-                    magia.alcance,
-                    filtroOpcoes.Alcance
-                ) &&
-                applyFilter(
-                    filtroPesquisa.alvo,
-                    magia.alvo,
-                    filtroOpcoes.Alvo
-                ) &&
-                applyFilter(
-                    filtroPesquisa.area,
-                    magia.area,
-                    filtroOpcoes.Área
-                ) &&
-                applyFilter(filtroPesquisa.circulo, magia.circulo) &&
-                applyFilter(
-                    filtroPesquisa.duracao,
-                    magia.duracao,
-                    filtroOpcoes.Duração
-                ) &&
-                applyFilter(
-                    filtroPesquisa.efeito,
-                    magia.efeito,
-                    filtroOpcoes.Efeito,
-                    true
-                ) &&
-                applyFilter(filtroPesquisa.escola, magia.escola) &&
-                applyFilter(
-                    filtroPesquisa.execucao,
-                    magia.execucao,
-                    filtroOpcoes.Execução
-                ) &&
-                applyFilter(
-                    filtroPesquisa.resistencia,
-                    magia.resistencia,
-                    filtroOpcoes.Resistência
-                ) &&
-                applyFilter(filtroPesquisa.tipo, magia.tipo)
-            );
+          return (
+            stringSearch(magia.nome, filtroPesquisa.nome) &&
+            applyFilter(
+              filtroPesquisa.alcance,
+              magia.alcance,
+              filtroOpcoes.Alcance
+            ) &&
+            applyFilter(
+              filtroPesquisa.alvo,
+              magia.alvo,
+              filtroOpcoes.Alvo
+            ) &&
+            applyFilter(
+              filtroPesquisa.area,
+              magia.area,
+              filtroOpcoes.Área
+            ) &&
+            applyFilter(filtroPesquisa.circulo, magia.circulo) &&
+            applyFilter(
+              filtroPesquisa.duracao,
+              magia.duracao,
+              filtroOpcoes.Duração
+            ) &&
+            applyFilter(
+              filtroPesquisa.efeito,
+              magia.efeito,
+              filtroOpcoes.Efeito,
+              true
+            ) &&
+            applyFilter(filtroPesquisa.escola, magia.escola) &&
+            applyFilter(
+              filtroPesquisa.execucao,
+              magia.execucao,
+              filtroOpcoes.Execução
+            ) &&
+            applyFilter(
+              filtroPesquisa.resistencia,
+              magia.resistencia,
+              filtroOpcoes.Resistência
+            ) &&
+            applyFilter(filtroPesquisa.tipo, magia.tipo)
+            &&
+            applyFilter(
+              filtroPesquisa.referencia,
+              magia.referencia,
+              filtroOpcoes.Referencia)
+          );
         });
     }
 
